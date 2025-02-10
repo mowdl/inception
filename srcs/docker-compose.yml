@@ -1,0 +1,12 @@
+services:
+  nginx:
+    build: ./nginx
+    depends_on:
+      - wordpress
+    ports:
+      - 4431:443
+  wordpress:
+    # TODO: delete this
+    image: php:7.4-fpm
+    volumes:
+      - /home/mowdl/data/wordpress:/var/www/wordpress
