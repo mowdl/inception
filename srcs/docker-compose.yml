@@ -1,12 +1,57 @@
+networks:
+  inception:
+    driver: bridge
+
+
+volumes:
+  website_files:
+    driver_opts:
+      type: none # no specific file system
+      o: bind    # use a bind mount
+      device: /home/mel-meka/data/wordpress
+  db_files:
+    driver_opts:
+      type: none # no specific file system
+      o: bind    # use a bind mount
+      device: /home/mel-meka/data/mariadb
+
+
+
 services:
   nginx:
     build: ./nginx
     depends_on:
       - wordpress
+    networks:
+      - inception
     ports:
-      - 4431:443
-  wordpress:
-    # TODO: delete this
-    image: php:7.4-fpm
+     - 443:443
     volumes:
-      - /home/mowdl/data/wordpress:/var/www/wordpress
+      - website_files:/var/www/html
+  wordpress:
+    hostname: wordpress
+    build: ./wordpress
+    depends_on:
+      mariadb:
+          condition: service_healthy
+    networks:
+      - inception
+    env_file:
+        - .env
+    volumes:
+      - website_files:/var/www/html
+  mariadb:
+    hostname: mariadb
+    build: ./mariadb
+    networks:
+      - inception
+    env_file:
+        - .env
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - db_files:/var/lib/mysql
+
