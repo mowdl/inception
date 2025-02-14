@@ -1,5 +1,7 @@
 cd /var/www/html
 
+mkdir -p /run/php
+
 if [[ $(cat /var/www/html/wp-config.php) ]]; then
 	echo "wp-config.php exists. Assuming wordpress is installed."
 else
@@ -23,4 +25,4 @@ else
 fi
 
 echo running php-fpm...
-php-fpm8.2 -F
+php-fpm7.4 -F

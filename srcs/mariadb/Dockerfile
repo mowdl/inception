@@ -1,4 +1,4 @@
-FROM debian:12
+FROM debian:11
 
 
 RUN apt-get update && apt-get install -y mariadb-server --no-install-recommends; apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

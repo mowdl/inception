@@ -4,10 +4,10 @@ SSL_CERT_KEY = srcs/nginx/conf/selfsigned.key
 SSL_CERT = srcs/nginx/conf/selfsigned.crt
 
 run:
-	docker compose -f srcs/docker-compose.yml up
+	docker compose -f srcs/docker-compose.yml up --build
 
 up:
-	docker compose -f srcs/docker-compose.yml up -d
+	docker compose -f srcs/docker-compose.yml up -d --build
 
 down:
 	docker compose -f srcs/docker-compose.yml down
