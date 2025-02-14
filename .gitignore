@@ -1,3 +1,5 @@
 srcs/.env
+srcs/bonus/.env
 
+srcs/bonus/nginx/conf/selfsigned*
 srcs/nginx/conf/selfsigned*

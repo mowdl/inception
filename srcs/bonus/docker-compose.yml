@@ -1,0 +1,61 @@
+networks:
+  inception:
+    driver: bridge
+
+
+volumes:
+  website_files:
+    driver_opts:
+      type: none # no specific file system
+      o: bind    # use a bind mount
+      device: /home/mel-meka/data_bonus/wordpress
+  db_files:
+    driver_opts:
+      type: none # no specific file system
+      o: bind    # use a bind mount
+      device: /home/mel-meka/data_bonus/mariadb
+
+
+
+services:
+  nginx:
+    build: ./nginx
+    depends_on:
+      - wordpress
+    networks:
+      - inception
+    ports:
+     - 443:443
+    volumes:
+      - website_files:/var/www/html
+    restart: always
+  wordpress:
+    build: ./wordpress
+    depends_on:
+      mariadb:
+          condition: service_healthy
+    networks:
+      - inception
+    env_file:
+        - .env
+    volumes:
+      - website_files:/var/www/html
+    restart: always
+  mariadb:
+    build: ./mariadb
+    networks:
+      - inception
+    env_file:
+        - .env
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - db_files:/var/lib/mysql
+    restart: always
+  redis:
+    build: ./redis
+    networks:
+      - inception
