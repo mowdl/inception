@@ -68,3 +68,9 @@ services:
     ports:
       - 21:21
       - 20:20
+  adminer:
+    build: ./adminer
+    ports:
+      - 8000:8000
+    networks:
+      - inception
