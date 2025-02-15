@@ -59,3 +59,12 @@ services:
     build: ./redis
     networks:
       - inception
+  ftp:
+    build: ./ftp
+    volumes:
+      - website_files:/wordpress
+    networks:
+      - inception
+    ports:
+      - 21:21
+      - 20:20
