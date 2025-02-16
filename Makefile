@@ -8,7 +8,7 @@ BONUS_SSL_CERT = srcs/bonus/nginx/conf/selfsigned.crt
 
 
 
-run:
+run: certs
 	docker compose -f srcs/docker-compose.yml up --build
 
 up:
@@ -31,5 +31,5 @@ certs_bonus:
 
 
 
-bonus_run:
+bonus_run: bonus_certs
 	docker compose -f srcs/bonus/docker-compose.yml up --build
