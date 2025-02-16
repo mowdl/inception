@@ -14,6 +14,25 @@ volumes:
       type: none # no specific file system
       o: bind    # use a bind mount
       device: /home/mel-meka/data_bonus/mariadb
+  nginx_logs:
+    driver_opts:
+      type: none # no specific file system
+      o: bind    # use a bind mount
+      device: /home/mel-meka/data_bonus/nginx_logs
+  grafana:
+    driver_opts:
+      type: none # no specific file system
+      o: bind    # use a bind mount
+      device: /home/mel-meka/data_bonus/grafana
+  personal-website:
+    driver_opts:
+      type: none # no specific file system
+      o: bind    # use a bind mount
+      device: /home/mel-meka/data_bonus/personal_website/public/
+
+
+
+
 
 
 
@@ -22,12 +41,16 @@ services:
     build: ./nginx
     depends_on:
       - wordpress
+      - adminer
     networks:
       - inception
     ports:
      - 443:443
+     - 8002:8002
     volumes:
       - website_files:/var/www/html
+      - nginx_logs:/var/log/nginx
+      - personal-website:/personal-website
     restart: always
   wordpress:
     build: ./wordpress
@@ -63,14 +86,19 @@ services:
     build: ./ftp
     volumes:
       - website_files:/wordpress
-    networks:
-      - inception
     ports:
       - 21:21
       - 20:20
   adminer:
     build: ./adminer
-    ports:
-      - 8000:8000
     networks:
       - inception
+  grafana:
+    build: ./grafana
+    ports:
+      - 3000:3000
+    networks:
+    - inception
+    volumes:
+      - nginx_logs:/nginx_logs
+      - grafana:/usr/share/grafana
